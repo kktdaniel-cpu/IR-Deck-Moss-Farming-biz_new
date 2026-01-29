@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life 2.0 IR Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+        
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        /* Slide 1: 표지 */
+        .slide-1 {
+            background: linear-gradient(135deg, #1a3c6e 0%, #2d5a8c 50%, #4a7ba7 100%);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 60px;
+        }
+        
+        .slide-1 h1 {
+            font-size: 4em;
+            font-weight: 700;
+            margin-bottom: 40px;
+            line-height: 1.3;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .slide-1 h2 {
+            font-size: 2.2em;
+            font-weight: 400;
+            margin-bottom: 50px;
+            opacity: 0.95;
+        }
+        
+        .keywords {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+        
+        .keyword {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            backdrop-filter: blur(10px);
+        }
+        
+        .presenters {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        /* Slide 2: 문제 정의 */
+        .slide-2 {
+            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+        }
+        
+        .slide-title {
+            font-size: 3em;
+            color: #1a3c6e;
+            margin-bottom: 50px;
+            border-bottom: 4px solid #1a3c6e;
+            padding-bottom: 20px;
+        }
+        
+        .problem-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            flex: 1;
+        }
+        
+        .problem-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .problem-box h3 {
+            font-size: 2em;
+            color: #c62828;
+            margin-bottom: 25px;
+        }
+        
+        .problem-box ul {
+            list-style: none;
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .problem-box li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .problem-box li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #c62828;
+            font-weight: bold;
+        }
+        
+        .opportunity {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #1a3c6e, #2d5a8c);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .opportunity h3 {
+            color: #ffd700 !important;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        
+        /* Slide 3: 솔루션 */
+        .slide-3 {
+            background: linear-gradient(to bottom, #e3f2fd 0%, #bbdefb 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+        }
+        
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .solution-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-top: 6px solid;
+        }
+        
+        .solution-card:nth-child(1) {
+            border-top-color: #ff6b6b;
+        }
+        
+        .solution-card:nth-child(2) {
+            border-top-color: #4ecdc4;
+        }
+        
+        .solution-card:nth-child(3) {
+            border-top-color: #ffd93d;
+        }
+        
+        .solution-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #1a3c6e;
+        }
+        
+        .solution-card .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        .solution-card p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        /* Slide 4: 핵심 기술 */
+        .slide-4 {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+            color: white;
+        }
+        
+        .slide-4 .slide-title {
+            color: white;
+            border-bottom-color: #4ecdc4;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .tech-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+        }
+        
+        .tech-card h4 {
+            font-size: 1.5em;
+            color: #4ecdc4;
+            margin-bottom: 20px;
+        }
+        
+        .tech-card p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .certification {
+            margin-top: 40px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .certification h4 {
+            font-size: 1.5em;
+            color: #ffd700;
+        }
+        
+        /* Slide 5: 비즈니스 모델 */
+        .slide-5 {
+            background: linear-gradient(to bottom, #f5f5f5 0%, #e0e0e0 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+        }
+        
+        .revenue-streams {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .revenue-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        
+        .revenue-card .revenue-icon {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+        }
+        
+        .revenue-card h3 {
+            font-size: 1.8em;
+            color: #1a3c6e;
+            margin-bottom: 15px;
+        }
+        
+        .revenue-card p {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        /* Slide 6: 주요 성과 */
+        .slide-6 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+            color: white;
+        }
+        
+        .slide-6 .slide-title {
+            color: white;
+            border-bottom-color: #ffd700;
+        }
+        
+        .traction-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .traction-box {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+        }
+        
+        .traction-box h3 {
+            font-size: 2em;
+            color: #ffd700;
+            margin-bottom: 25px;
+        }
+        
+        .traction-box ul {
+            list-style: none;
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+        
+        .traction-box li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .traction-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        
+        /* Slide 7: 로드맵 */
+        .slide-7 {
+            background: linear-gradient(to right, #134e5e 0%, #71b280 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+            color: white;
+        }
+        
+        .slide-7 .slide-title {
+            color: white;
+            border-bottom-color: #71b280;
+        }
+        
+        .roadmap {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            position: relative;
+        }
+        
+        .roadmap:before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .phase {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .phase-circle {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            color: #134e5e;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .phase h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        .phase ul {
+            list-style: none;
+            font-size: 1.1em;
+            line-height: 1.7;
+            text-align: left;
+            display: inline-block;
+        }
+        
+        .phase li {
+            margin-bottom: 8px;
+        }
+        
+        /* Slide 8: 팀 */
+        .slide-8 {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+            color: white;
+        }
+        
+        .slide-8 .slide-title {
+            color: white;
+            border-bottom-color: #3498db;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .team-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .team-card .avatar {
+            width: 100px;
+            height: 100px;
+            background: #3498db;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+        }
+        
+        .team-card h3 {
+            font-size: 2em;
+            color: #3498db;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .team-card h4 {
+            font-size: 1.3em;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .team-card p {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #e0e0e0;
+        }
+        
+        /* Slide 9: 자금 소요 */
+        .slide-9 {
+            background: linear-gradient(135deg, #1a3c6e 0%, #2d5a8c 100%);
+            flex-direction: column;
+            padding: 60px 80px;
+            color: white;
+        }
+        
+        .slide-9 .slide-title {
+            color: white;
+            border-bottom-color: #4ecdc4;
+        }
+        
+        .fund-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .fund-box {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+        }
+        
+        .fund-box h3 {
+            font-size: 2em;
+            color: #4ecdc4;
+            margin-bottom: 25px;
+        }
+        
+        .fund-box ul {
+            list-style: none;
+            font-size: 1.2em;
+            line-height: 1.9;
+        }
+        
+        .fund-box li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .fund-box li:before {
+            content: "💰";
+            position: absolute;
+            left: 0;
+        }
+        
+        .tips-message {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a3c6e;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .tips-message h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .tips-message p {
+            font-size: 1.3em;
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            background: rgba(26, 60, 110, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(26, 60, 110, 1);
+            transform: scale(1.05);
+        }
+        
+        .slide-number {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: 표지 -->
+        <div class="slide slide-1 active">
+            <h1>은퇴자의 내일을 기술과 데이터로 경작하다<br>Life 2.0</h1>
+            <h2>에너지 자립형 스마트팜 & 시니어 위탁 경영 플랫폼 (LPPA)</h2>
+            <div class="keywords">
+                <span class="keyword">#소셜벤처</span>
+                <span class="keyword">#탄소중립_AgTech</span>
+                <span class="keyword">#PVT_수배관공조</span>
+                <span class="keyword">#은퇴설계_솔루션</span>
+            </div>
+            <div class="presenters">
+                홍인철 연구소장 (CTO) / 김영범 대표이사 (CEO)
+            </div>
+        </div>
+
+        <!-- Slide 2: 문제 정의 -->
+        <div class="slide slide-2">
+            <h2 class="slide-title">왜 이 사업인가?</h2>
+            <div class="problem-container">
+                <div class="problem-box">
+                    <h3>💔 Social Problem</h3>
+                    <ul>
+                        <li>베이비부머 대거 은퇴로 인한 <strong>소득 절벽</strong></li>
+                        <li>단순 노무직 외에 양질의 시니어 일자리 부족</li>
+                        <li>자존감 상실과 사회적 고립</li>
+                    </ul>
+                </div>
+                <div class="problem-box">
+                    <h3>⚡ Tech Problem</h3>
+                    <ul>
+                        <li><strong>고비용:</strong> EHP 과다 사용 → 전기세 폭탄</li>
+                        <li><strong>기술 장벽:</strong> 복잡한 제어로 고령자 접근 어려움</li>
+                        <li><strong>탄소 배출:</strong> 난방·탄소 시비로 환경 부하</li>
+                    </ul>
+                </div>
+                <div class="problem-box opportunity">
+                    <h3>💡 Opportunity</h3>
+                    <p style="font-size: 1.3em;">"기술 없는 은퇴자도 수익을 낼 수 있는<br>저에너지·고효율 시스템"이 필요합니다</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 솔루션 -->
+        <div class="slide slide-3">
+            <h2 class="slide-title">3-Core 융합 모델: Energy + Bio + Platform</h2>
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <div class="icon">⚡</div>
+                    <h3>[Energy] 자립형 H/W</h3>
+                    <p><strong>PVT + 수배관 공조</strong><br>
+                    태양광·열 융합으로<br>
+                    <span style="color: #ff6b6b; font-weight: bold; font-size: 1.3em;">전력비 50% 절감</span></p>
+                </div>
+                <div class="solution-card">
+                    <div class="icon">🌱</div>
+                    <h3>[Bio] 탄소 순환</h3>
+                    <p><strong>버섯(20%) + 이끼(80%)</strong><br>
+                    CO₂ 배출·흡수 공생으로<br>
+                    <span style="color: #4ecdc4; font-weight: bold; font-size: 1.3em;">탄소 배출 Zero</span><br>
+                    <span style="color: #4ecdc4; font-weight: bold; font-size: 1.3em;">생육 효율 30% ↑</span></p>
+                </div>
+                <div class="solution-card">
+                    <div class="icon">📱</div>
+                    <h3>[Platform] LPPA</h3>
+                    <p><strong>디지털 SOP</strong><br>
+                    비숙련 시니어도<br>
+                    스마트폰 앱으로<br>
+                    <span style="color: #ffd93d; font-weight: bold; font-size: 1.3em;">전문가처럼 경영</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 핵심 기술 -->
+        <div class="slide slide-4">
+            <h2 class="slide-title">핵심 기술: 경쟁 우위</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h4>Tech 1. 수배관 하이브리드 공조</h4>
+                    <p><strong>특허 기술:</strong> 잉여 전력을 열(온수/냉수)로 저장<br>
+                    → Thermal Battery<br>
+                    → 피크 부하 Cut-off</p>
+                </div>
+                <div class="tech-card">
+                    <h4>Tech 2. ALM & 초미세 분무</h4>
+                    <p><strong>능동적 광 관리:</strong> 외부 일사량 따라 LED 자동 조절<br>
+                    <strong>10~20µm Dry Fogging:</strong> 이끼 엽면 흡수 최적화</p>
+                </div>
+                <div class="tech-card">
+                    <h4>Tech 3. AI 엣지 컴퓨팅</h4>
+                    <p><strong>Stand-alone 시스템:</strong> 클라우드 의존 없이<br>
+                    개별 컨테이너에서<br>
+                    환경 즉각 제어</p>
+                </div>
+            </div>
+            <div class="certification">
+                <h4>🏆 기술성 입증: K-택소노미(녹색경제활동) 적합 판정 / 벤처기업 확인 심의 중</h4>
+            </div>
+        </div>
+
+        <!-- Slide 5: 비즈니스 모델 -->
+        <div class="slide slide-5">
+            <h2 class="slide-title">Triple Cash Flow 수익 구조</h2>
+            <div class="revenue-streams">
+                <div class="revenue-card">
+                    <div class="revenue-icon">🏢</div>
+                    <h3>R1. B2G/B2B</h3>
+                    <p>표준 컨테이너 및 설비 판매<br><br>
+                    지자체 스마트팜 단지<br>
+                    기업 ESG 시설</p>
+                </div>
+                <div class="revenue-card">
+                    <div class="revenue-icon">🪴</div>
+                    <h3>R2. Product</h3>
+                    <p>Moss Mist Table<br>(이끼 테이블)<br><br>
+                    공기정화 플랜테리어<br>
+                    오피스/카페 시장</p>
+                </div>
+                <div class="revenue-card">
+                    <div class="revenue-icon">📱</div>
+                    <h3>R3. Service</h3>
+                    <p>LPPA 플랫폼<br>
+                    위탁 운영 수수료<br><br>
+                    시니어 교육/분양<br>
+                    수익</p>
+                </div>
+            </div>
+            <div class="problem-box opportunity" style="margin-top: 40px;">
+                <h3>📊 시장성</h3>
+                <p style="font-size: 1.2em;">글로벌 스마트팜 시장 (연 9.8% 성장) + 국내 실버 산업 (2030년 168조 원)</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: 주요 성과 -->
+        <div class="slide slide-6">
+            <h2 class="slide-title">주요 성과: 시장 검증 완료</h2>
+            <div class="traction-grid">
+                <div class="traction-box">
+                    <h3>💰 매출/계약</h3>
+                    <ul>
+                        <li>헬스케어 네트웍스 (3,000만 원)</li>
+                        <li>더보라뷰티 (1,200만 원)</li>
+                        <li>세인엔에스 (AI 제어 시스템)</li>
+                        <li><strong>실매출 발생 중</strong></li>
+                    </ul>
+                </div>
+                <div class="traction-box">
+                    <h3>🤝 MOU & 파트너십</h3>
+                    <ul>
+                        <li>천경해운, 한국에너지진단사협회 등</li>
+                        <li><strong>5건 MOU 체결</strong></li>
+                        <li>잠재 고객 2,000명 DB 확보</li>
+                    </ul>
+                </div>
+                <div class="traction-box" style="grid-column: 1 / -1;">
+                    <h3>🌏 Global</h3>
+                    <ul>
+                        <li>캄보디아 수출 계약 ($10,000) 추진</li>
+                        <li>개도국 대상 'Off-Grid 패키지' 수출 준비</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 로드맵 -->
+        <div class="slide slide-7">
+            <h2 class="slide-title">성장 로드맵</h2>
+            <div class="roadmap">
+                <div class="phase">
+                    <div class="phase-circle">2026</div>
+                    <h3>Phase 1: 기반 구축</h3>
+                    <ul>
+                        <li>✓ 신보 보증 확보</li>
+                        <li>✓ 시제품 제작</li>
+                        <li>✓ 벤처 인증 획득</li>
+                    </ul>
+                </div>
+                <div class="phase">
+                    <div class="phase-circle">2027</div>
+                    <h3>Phase 2: 실증/확산</h3>
+                    <ul>
+                        <li>✓ LPPA 앱 런칭</li>
+                        <li>✓ 시니어 아카데미 1기</li>
+                        <li>✓ Start-up NEST 도전</li>
+                    </ul>
+                </div>
+                <div class="phase">
+                    <div class="phase-circle">2028</div>
+                    <h3>Phase 3: 도약</h3>
+                    <ul>
+                        <li>✓ 시니어 창업자 50명</li>
+                        <li>✓ 누적 매출 50억</li>
+                        <li>✓ TIPS 선정</li>
+                        <li>✓ 글로벌 수출</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 팀 -->
+        <div class="slide slide-8">
+            <h2 class="slide-title">전문성 기반 팀 구성</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="avatar">👨‍💼</div>
+                    <h3>김영범 대표이사</h3>
+                    <h4>CEO / 총괄·Biz</h4>
+                    <p><strong>자산관리 석사</strong><br><br>
+                    • 금융 구조 설계 전문<br>
+                    • 시니어 분양 모델(BM) 총괄<br>
+                    • 리스크 관리 역량 보유</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">👨‍🔬</div>
+                    <h3>홍인철 연구소장</h3>
+                    <h4>CTO / 연구·Tech</h4>
+                    <p><strong>환경공학·프롭테크</strong><br><br>
+                    • 스마트팜 설비 설계<br>
+                    • AI 제어 로직 개발<br>
+                    • 실제 기술 구현 총괄</p>
+                </div>
+            </div>
+            <div class="traction-box" style="margin-top: 40px;">
+                <h3>🤝 협력 네트워크</h3>
+                <p style="font-size: 1.2em; text-align: center; line-height: 1.8;">
+                    (주)에스비제이 (양산 협력) | 타비오 (생육 검증) 등<br>
+                    탄탄한 파트너사 보유
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 9: 자금 소요 -->
+        <div class="slide slide-9">
+            <h2 class="slide-title">자금 소요 및 상환 계획</h2>
+            <div class="fund-grid">
+                <div class="fund-box">
+                    <h3>💰 자금 용도</h3>
+                    <ul>
+                        <li>스마트팜 표준 컨테이너 시제품 제작</li>
+                        <li>LPPA 플랫폼 개발비</li>
+                        <li>총 R&D 예산 중 민간 부담금</li>
+                        <li>추가 양산 자금</li>
+                    </ul>
+                </div>
+                <div class="fund-box">
+                    <h3>👥 고용 창출</h3>
+                    <ul>
+                        <li>개발자 신규 채용 (청년 일자리)</li>
+                        <li>연구 보조원 채용</li>
+                        <li>시니어 위탁 관리자 육성 (노인 일자리)</li>
+                    </ul>
+                </div>
+                <div class="fund-box" style="grid-column: 1 / -1;">
+                    <h3>📊 상환 재원</h3>
+                    <ul>
+                        <li><strong>R1:</strong> 컨테이너 판매 수익</li>
+                        <li><strong>R2:</strong> 이끼 테이블 매출</li>
+                        <li><strong>R3:</strong> LPPA 플랫폼 수수료</li>
+                        <li>Triple Cash Flow로 이자 및 원금 안정적 상환</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tips-message">
+                <h3>🚀 신보의 지원을 발판으로 2028년 TIPS에 도전하겠습니다</h3>
+                <p><strong>준비된 기술 기업</strong> | 구체적 R&D 계획 | 실매출 발생 | 협력사 세팅 완료<br>
+                성장 잠재력이 큰 소셜벤처로 함께 성장하겠습니다</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-number">
+        <span id="current-slide">1</span> / 9
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="prevSlide()">◀ 이전</button>
+        <button class="nav-btn" onclick="nextSlide()">다음 ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 9;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides[currentSlide - 1].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // 키보드 단축키
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
